@@ -4,8 +4,6 @@ import {
   INITIAL_HISTOGRAM_SIZE,
 } from "../constants/config";
 
-const PIXEL_DRAG_SIZE = 30; // Delta in number of pixels to change the value of bar
-
 interface IHistogramProvider {
   maxGraphValue: number;
   setMaxGraphValue: (newValue: number) => void;
@@ -63,13 +61,19 @@ export const HistogramProvider = ({
     clientY.current = e.clientY;
 
     const handleDragMove = (moveEvent: PointerEvent) => {
+      const graph = document.getElementById("graph");
+      if (graph === null) return;
+      const graphY = graph.getBoundingClientRect().y;
+      const graphHeight = graph.offsetHeight;
+      const step = graphHeight / maxGraphValue;
       const deltaY = clientY.current - moveEvent.clientY;
-      const stepAdjustment = Math.round(deltaY / PIXEL_DRAG_SIZE);
+      const stepAdjustment = Math.round(deltaY / step);
       const newValue = Math.max(0, value + stepAdjustment);
-      if (newValue > maxGraphValue) return;
+      if (newValue > maxGraphValue || graphY + graphHeight < moveEvent.clientY)
+        return;
       setIndicatorData({
         value: newValue,
-        height: moveEvent.clientY - 484 / 2,
+        height: moveEvent.clientY - graphY,
       });
       setBarValue(barIndex, newValue);
     };
@@ -93,7 +97,9 @@ export const HistogramProvider = ({
   const setGraphValue = (newValue: number) => {
     const maxBarValue = Math.max(...barValues);
 
-    if (newValue < maxBarValue) return;
+    if (newValue < maxBarValue || newValue <= 0) return;
+
+    setMaxGraphValue(newValue);
   };
 
   const toggleReadOnlyMode = () => {

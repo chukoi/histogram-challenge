@@ -18,7 +18,7 @@ const Histogram = ({ className }: HistogramProps) => {
     <div className={classNames("flex flex-col justify-center", className)}>
       <div className="border-slate-400 rounded-lg border min-w-[600px] px-8 py-2">
         <h2>Histogram</h2>
-        <div className="relative">
+        <div id="graph" className="relative">
           <div
             className={classNames(
               "flex justify-between items-end border-l-2 border-b-2 border-slate-400 bg-slate-100 px-8",

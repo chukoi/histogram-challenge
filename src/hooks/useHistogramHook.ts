@@ -3,6 +3,7 @@ import { HistogramContext } from "../provider/HistogramProvider";
 
 const useHistogramHook = () => {
   const {
+    setGraphHeight,
     barValues,
     maxGraphValue,
     setMaxGraphValue,
@@ -12,6 +13,7 @@ const useHistogramHook = () => {
     indicatorData,
   } = useContext(HistogramContext);
   return {
+    setGraphHeight,
     barValues,
     maxGraphValue,
     setMaxGraphValue,
