@@ -19,6 +19,7 @@ interface IHistogramProvider {
     value: number;
     height: number;
   } | null;
+  graphRef: React.RefObject<HTMLDivElement>;
 }
 
 export const HistogramContext = createContext<IHistogramProvider>({
@@ -33,6 +34,9 @@ export const HistogramContext = createContext<IHistogramProvider>({
     _barIndex: number
   ): void => {},
   indicatorData: null,
+  graphRef: {
+    current: null,
+  },
 });
 
 export const HistogramProvider = ({
@@ -50,6 +54,7 @@ export const HistogramProvider = ({
     height: number;
   } | null>(null);
 
+  const graphRef = useRef<HTMLDivElement>(null);
   const clientY = useRef<number>(0);
 
   const handleResize = (
@@ -61,8 +66,8 @@ export const HistogramProvider = ({
     clientY.current = e.clientY;
 
     const handleDragMove = (moveEvent: PointerEvent) => {
-      const graph = document.getElementById("graph");
-      if (graph === null) return;
+      const graph = graphRef.current;
+      if (!graph) return;
       const graphY = graph.getBoundingClientRect().y;
       const graphHeight = graph.offsetHeight;
       const step = graphHeight / maxGraphValue;
@@ -80,10 +85,12 @@ export const HistogramProvider = ({
 
     const handleDragEnd = () => {
       setIndicatorData(null);
+      document.removeEventListener("pointerdown", handleDragMove);
       document.removeEventListener("pointermove", handleDragMove);
       document.removeEventListener("pointerup", handleDragEnd);
     };
 
+    document.addEventListener("pointerdown", handleDragMove);
     document.addEventListener("pointermove", handleDragMove);
     document.addEventListener("pointerup", handleDragEnd);
   };
@@ -116,6 +123,7 @@ export const HistogramProvider = ({
         toggleReadOnlyMode,
         handleResize,
         indicatorData,
+        graphRef,
       }}
     >
       {children}

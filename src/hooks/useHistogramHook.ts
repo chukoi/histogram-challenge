@@ -11,6 +11,7 @@ const useHistogramHook = () => {
     toggleReadOnlyMode,
     handleResize,
     indicatorData,
+    graphRef,
   } = useContext(HistogramContext);
   return {
     setGraphHeight,
@@ -21,6 +22,7 @@ const useHistogramHook = () => {
     toggleReadOnlyMode,
     handleResize,
     indicatorData,
+    graphRef,
   };
 };
 

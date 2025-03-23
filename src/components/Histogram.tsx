@@ -9,7 +9,7 @@ interface HistogramProps {
 }
 
 const Histogram = ({ className }: HistogramProps) => {
-  const { barValues, maxGraphValue, handleResize, indicatorData } =
+  const { barValues, maxGraphValue, handleResize, indicatorData, graphRef } =
     useHistogramHook();
 
   const yAxisMarks = Array.from({ length: maxGraphValue + 1 }, (_, idx) => idx); // Array to mark numbers along the Y-Axis
@@ -18,7 +18,7 @@ const Histogram = ({ className }: HistogramProps) => {
     <div className={classNames("flex flex-col justify-center", className)}>
       <div className="border-slate-400 rounded-lg border min-w-[600px] px-8 py-2">
         <h2>Histogram</h2>
-        <div id="graph" className="relative">
+        <div ref={graphRef} className="relative">
           <div
             className={classNames(
               "flex justify-between items-end border-l-2 border-b-2 border-slate-400 bg-slate-100 px-8",
@@ -64,6 +64,7 @@ const Histogram = ({ className }: HistogramProps) => {
                 }}
               />
             ))}
+          {/* Indicator */}
           {indicatorData !== null && (
             <Indicator
               value={indicatorData.value}
